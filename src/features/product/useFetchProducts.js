@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 export const useFetchProducts = ({ onError }) => {
   return useQuery({
     queryFn: async () => {
-      const productsResponse = await axiosInstance.get("/products");
+      const productsResponse = await axiosInstance.get("/users");
 
       return productsResponse;
     },

@@ -10,20 +10,37 @@ import {
   Tr,
   Spinner
 } from "@chakra-ui/react";
-import { useProducts } from "@/features/product/useFetchProducts";
+import {
+  useFetchProducts,
+} from "@/features/product";
+
 
 export default function Home() {
-  const { data: products, isLoading } = useProducts();
+  // const { data: products, isLoading } = useProducts();
+  // console.log("test data user:", users)
+
+  const {
+    data,
+    isLoading: productsIsLoading,
+    refetch: refetchProducts,
+  } = useFetchProducts({
+    onError: () => {
+      toast({
+        title: "Ada kesalahan terjadi",
+        status: "error",
+      });
+    },
+  });
 
   const renderProducts = () => {
-    return products.map((product) => {
+    return data?.data.map((product) => {
       return (
         <Tr key={product.id}>
           <Td>{product.id}</Td>
           <Td>{product.name}</Td>
-          <Td>{product.price}</Td>
-          <Td>{product.description}</Td>
-          <Td>{product.image}</Td>
+          <Td>{product.email}</Td>
+          <Td>{product.phone}</Td>
+          <Td>{product.address.geo.lat}</Td>
         </Tr>
       );
     });
@@ -52,7 +69,7 @@ export default function Home() {
             </Thead>
             <Tbody>
               {renderProducts()}
-              {isLoading && <Spinner />}
+              {productsIsLoading && <Spinner />}
               </Tbody>
           </Table>
         </Container>
@@ -60,3 +77,5 @@ export default function Home() {
     </>
   );
 }
+
+

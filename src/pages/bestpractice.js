@@ -24,10 +24,6 @@ import {
   useFetchProducts,
 } from "@/features/product";
 
-// formik -> handle forms
-// yup -> validate
-// react-query -> manage API calls (caching, state, dll.)
-
 export default function Home() {
   const toast = useToast();
 
@@ -38,7 +34,7 @@ export default function Home() {
   } = useFetchProducts({
     onError: () => {
       toast({
-        title: "Ada kesalahan terjadi",
+        title: "shometing error!!",
         status: "error",
       });
     },
@@ -47,21 +43,21 @@ export default function Home() {
   const formik = useFormik({
     initialValues: {
       name: "",
-      price: 0,
-      description: "",
-      image: "",
+      email: "",
+      phone: "",
+      website: "",
       id: 0,
     },
     onSubmit: async () => {
-      const { name, price, description, image, id } = formik.values;
-
+      // melakukan post data yang sudah diisi melalui formInput
+      const { name, email, phone, website, id } = formik.values;
       if (id) {
-        // Melakukan PATCH /products/{id}
+        // melakukan PATCH product/{id}
         editProduct({
           name,
-          price,
-          description,
-          image,
+          email,
+          phone,
+          website,
           id,
         });
 
@@ -70,24 +66,23 @@ export default function Home() {
           status: "success",
         });
       } else {
-        // Melakukan POST /products
+        //Melakukan POST product
         createProduct({
           name,
-          price,
-          description,
-          image,
+          email,
+          phone,
+          website,
         });
 
         toast({
-          title: "Product added",
+          title: "data ditambahkan",
           status: "success",
         });
       }
-
       formik.setFieldValue("name", "");
-      formik.setFieldValue("price", 0);
-      formik.setFieldValue("description", "");
-      formik.setFieldValue("image", "");
+      formik.setFieldValue("email", "");
+      formik.setFieldValue("phone", "");
+      formik.setFieldValue("website", "");
       formik.setFieldValue("id", 0);
     },
   });
@@ -117,12 +112,12 @@ export default function Home() {
   };
 
   const confirmationDelete = (productId) => {
-    const shouldDelete = confirm("Are you sure?");
+    const shouldDelete = confirm("Apakah Kamu ingin menghapus?");
 
     if (shouldDelete) {
       deleteProduct(productId);
       toast({
-        title: "Deleted product",
+        title: "Delete Product",
         status: "info",
       });
     }
@@ -131,19 +126,21 @@ export default function Home() {
   const onEditClick = (product) => {
     formik.setFieldValue("id", product.id);
     formik.setFieldValue("name", product.name);
-    formik.setFieldValue("description", product.description);
-    formik.setFieldValue("price", product.price);
-    formik.setFieldValue("image", product.image);
+    formik.setFieldValue("email", product.email);
+    formik.setFieldValue("phone", product.phone);
+    formik.setFieldValue("website", product.website);
   };
 
   const renderProducts = () => {
     return data?.data.map((product) => {
+      console.log("test :", product);
       return (
         <Tr key={product.id}>
           <Td>{product.id}</Td>
           <Td>{product.name}</Td>
-          <Td>{product.price}</Td>
-          <Td>{product.description}</Td>
+          <Td>{product.email}</Td>
+          <Td>{product.phone}</Td>
+          <Td>{product.website}</Td>
           <Td>
             <Button onClick={() => onEditClick(product)} colorScheme="cyan">
               Edit {product.id}
@@ -172,14 +169,19 @@ export default function Home() {
       </Head>
       <main>
         <Container>
-          <Heading>Home Page</Heading>
-          <Table mb="6">
+          <Heading>Product Page</Heading>
+          <Table mb="3">
             <Thead>
-              <Tr>
+              <Tr bgColor={'red'} >
+                <Th colSpan={4} textAlign="center" color={'white'} >Heade 01</Th>
+                <Th colSpan={3} textAlign='center' color={'white'}>Header 02</Th>
+              </Tr>
+              <Tr bgColor={'yellow'}>
                 <Th>ID</Th>
                 <Th>Name</Th>
-                <Th>Price</Th>
-                <Th>Description</Th>
+                <Th>Email</Th> 
+                <Th>Phone</Th>
+                <Th>Website</Th>
                 <Th colSpan={2}>Action</Th>
               </Tr>
             </Thead>
@@ -191,7 +193,7 @@ export default function Home() {
           <form onSubmit={formik.handleSubmit}>
             <VStack spacing="3">
               <FormControl>
-                <FormLabel>Product ID</FormLabel>
+                <FormLabel>ID</FormLabel>
                 <Input
                   onChange={handleFormInput}
                   name="id"
@@ -199,7 +201,7 @@ export default function Home() {
                 />
               </FormControl>
               <FormControl>
-                <FormLabel>Product Name</FormLabel>
+                <FormLabel>Name</FormLabel>
                 <Input
                   onChange={handleFormInput}
                   name="name"
@@ -207,33 +209,35 @@ export default function Home() {
                 />
               </FormControl>
               <FormControl>
-                <FormLabel>Price</FormLabel>
+                <FormLabel>Email</FormLabel>
+                {/* pemanggilan input onchange seharusnya */}
+                {/* <input onChange={(event) => handleFormInput(event)} name="email"/> */}
                 <Input
                   onChange={handleFormInput}
-                  name="price"
-                  value={formik.values.price}
+                  name="email"
+                  value={formik.values.email}
                 />
               </FormControl>
               <FormControl>
-                <FormLabel>Description</FormLabel>
+                <FormLabel>Phone</FormLabel>
                 <Input
                   onChange={handleFormInput}
-                  name="description"
-                  value={formik.values.description}
+                  name="phone"
+                  value={formik.values.phone}
                 />
               </FormControl>
               <FormControl>
-                <FormLabel>Image</FormLabel>
+                <FormLabel>Website</FormLabel>
                 <Input
                   onChange={handleFormInput}
-                  name="image"
-                  value={formik.values.image}
+                  name="website"
+                  value={formik.values.website}
                 />
               </FormControl>
               {createProductsIsLoading || editProductIsLoading ? (
                 <Spinner />
               ) : (
-                <Button type="submit">Submit Product</Button>
+                <Button type="submit">Submit Data</Button>
               )}
             </VStack>
           </form>

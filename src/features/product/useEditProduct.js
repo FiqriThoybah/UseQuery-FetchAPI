@@ -5,7 +5,7 @@ export const useEditProduct = ({ onSuccess }) => {
   return useMutation({
     mutationFn: async (body) => {
       const productsResponse = await axiosInstance.patch(
-        `/products/${body.id}`,
+        `/users/${body.id}`,
         body
       );
 
