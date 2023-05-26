@@ -44,7 +44,7 @@ export default function Home() {
     initialValues: {
       name: "",
       email: "",
-      phone: "",
+      phone: 0,
       website: "",
       id: 0,
     },
@@ -81,7 +81,7 @@ export default function Home() {
       }
       formik.setFieldValue("name", "");
       formik.setFieldValue("email", "");
-      formik.setFieldValue("phone", "");
+      formik.setFieldValue("phone", 0);
       formik.setFieldValue("website", "");
       formik.setFieldValue("id", 0);
     },
@@ -133,7 +133,6 @@ export default function Home() {
 
   const renderProducts = () => {
     return data?.data.map((product) => {
-      console.log("test :", product);
       return (
         <Tr key={product.id}>
           <Td>{product.id}</Td>
@@ -167,10 +166,10 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
+      <main >
         <Container>
           <Heading>Product Page</Heading>
-          <Table mb="3">
+          <Table mb="10">
             <Thead>
               <Tr bgColor={'red'} >
                 <Th colSpan={4} textAlign="center" color={'white'} >Heade 01</Th>
